@@ -1,0 +1,27 @@
+server:
+  port: 8085
+spring:
+  profiles:
+    active: dev
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/school_db
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 36000
+      data-source-properties:
+        socketTimeout: 36000
+  liquibase:
+    default-schema: school
+    change-log: classpath:config/db/db.changelog-master.xml
+    contexts: postgres
+logging:
+  level:
+    liquibase: DEBUG

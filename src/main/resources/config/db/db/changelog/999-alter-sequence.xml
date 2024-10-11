@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="999-alter-sequence-01" author="mondher">
+        <sql>
+            create sequence if not exists user_id_seq START WITH 1000 INCREMENT BY 1;
+            alter sequence user_id_seq RESTART WITH 1000;
+
+            create sequence if not exists student_id_seq START WITH 1000 INCREMENT BY 1;
+            alter sequence student_id_seq RESTART WITH 1000;
+
+            create sequence if not exists classroom_id_seq START WITH 1000 INCREMENT BY 1;
+            alter sequence classroom_id_seq RESTART WITH 1000;
+
+            create sequence if not exists teacher_id_seq START WITH 1000 INCREMENT BY 1;
+            alter sequence teacher_id_seq RESTART WITH 1000;
+        </sql>
+        <rollback>
+            <sql>
+
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

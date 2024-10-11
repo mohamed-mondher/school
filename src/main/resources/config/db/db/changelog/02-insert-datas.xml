@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="02" author="mondher">
+
+        <insert tableName="user">
+            <column name="id" value="1" type="BIGINT">
+            </column>
+            <column name="lastname" value="El Mannaa">
+            </column>
+            <column name="firstname" value="Mondher">
+            </column>
+            <column name="email" value="m.mannaa@yopmail.com">
+            </column>
+            <column name="password" value="secret">
+            </column>
+            <column name="role" value="Admin"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="insert-dev-data-02" author="mondher">
+
+        <insert tableName="user">
+            <column name="id" value="2" type="BIGINT">
+            </column>
+            <column name="lastname" value="test student">
+            </column>
+            <column name="firstname" value="test student">
+            </column>
+            <column name="email" value="student-name@yopmail.com">
+            </column>
+            <column name="password" value="secret">
+            </column>
+            <column name="role" value="student"/>
+        </insert>
+
+
+        <insert tableName="user">
+            <column name="id" value="3" type="BIGINT">
+            </column>
+            <column name="lastname" value="test teacher">
+            </column>
+            <column name="firstname" value="test teacher">
+            </column>
+            <column name="email" value="teacher-name@yopmail.com">
+            </column>
+            <column name="password" value="secret">
+            </column>
+            <column name="role" value="student"/>
+        </insert>
+
+        <insert tableName="classroom">
+            <column name="id" value="1" type="BIGINT">
+            </column>
+            <column name="name" value="CP1">
+            </column>
+        </insert>
+
+        <insert tableName="student">
+            <column name="id" value="1" type="BIGINT">
+            </column>
+            <column name="classroom_id" value="1">
+            </column>
+            <column name="user_id" value="2">
+            </column>
+        </insert>
+
+        <insert tableName="teacher">
+            <column name="id" value="1" type="BIGINT">
+            </column>
+            <column name="classroom_id" value="1">
+            </column>
+            <column name="user_id" value="3">
+            </column>
+            <column name="subject" value="science">
+            </column>
+        </insert>
+
+
+    </changeSet>
+</databaseChangeLog>
