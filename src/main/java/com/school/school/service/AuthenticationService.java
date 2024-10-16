@@ -32,6 +32,8 @@ public class AuthenticationService {
 
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid username or password", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

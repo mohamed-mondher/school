@@ -8,7 +8,7 @@ public class TestData {
 
 
     public static User buildUser() {
-        return new User(1L, "test firstname", "test lastname", "test-email@yopmail.com", "pwd", Role.Student);
+        return new User(1L, "test firstname", "test lastname", "test-email2@yopmail.com", "pwd", Role.Student);
     }
 
 }
