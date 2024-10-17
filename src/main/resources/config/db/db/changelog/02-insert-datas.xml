@@ -37,7 +37,7 @@
             </column>
             <column name="password" value="secret">
             </column>
-            <column name="role" value="student"/>
+            <column name="role" value="Student"/>
         </insert>
 
 
@@ -52,7 +52,7 @@
             </column>
             <column name="password" value="secret">
             </column>
-            <column name="role" value="student"/>
+            <column name="role" value="Student"/>
         </insert>
 
         <insert tableName="classroom">

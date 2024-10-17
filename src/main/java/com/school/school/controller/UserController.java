@@ -52,11 +52,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
-
-    @PutMapping("/v1/users")
-    public String encodeUsersPassword() {
-        userService.encodeUsersPassword();
-        return "User updated successfully";
-    }
-
 }

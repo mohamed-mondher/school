@@ -3,11 +3,13 @@ package com.school.school.service;
 import com.school.school.dto.User;
 import com.school.school.repository.UserRepository;
 import com.school.school.utils.Exception;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class UserService {
 
@@ -24,40 +26,30 @@ public class UserService {
     }
 
     public User findUserById(Long id) {
-        User user = userRepository.findById(id);
-
-        if (Objects.isNull(user)) {
-            throw new Exception("user not found" + id);
-
-        } else return user;
+        return Optional.ofNullable(userRepository.findById(id)).orElseThrow(() -> new Exception("User with id " + id + " not found", HttpStatus.NOT_FOUND));
     }
 
     public User createUser(User user) {
+        User byEmail = userRepository.findByEmail(user.email());
+        if (Objects.nonNull(byEmail)) {
+            throw new Exception("User with email " + user.email() + " already exist", HttpStatus.CONFLICT);
+        }
+
         String encodedPassword = passwordEncoder.encode(user.password());  // Encode the password
         User newUser = new User(null, user.firstname(), user.lastname(), user.email(), encodedPassword, user.role());
         return userRepository.save(newUser);
     }
 
     public User update(User user, Long id) {
+        findUserById(id);
         String encodedPassword = passwordEncoder.encode(user.password());  // Encode the password
         User newUser = new User(id, user.firstname(), user.lastname(), user.email(), encodedPassword, user.role());
-        int result = userRepository.update(newUser, id);
-        if (result == 0) {
-            throw new Exception("user not found" + id);
-        } else return findUserById(id);
+        userRepository.update(newUser, id);
+        return findUserById(id);
     }
-
-    public void encodeUsersPassword() {
-        List<User> users = userRepository.findAll();
-        users.stream().forEach(user -> {
-            String encodedPassword = passwordEncoder.encode(user.password());  // Encode the password
-            User newUser = new User(user.id(), user.firstname(), user.lastname(), user.email(), encodedPassword, user.role());
-            userRepository.update(newUser, user.id());
-        });
-    }
-
 
     public void deleteById(Long id) {
+        findUserById(id);
         userRepository.deleteById(id);
     }
 }

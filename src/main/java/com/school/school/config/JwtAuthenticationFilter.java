@@ -2,12 +2,14 @@ package com.school.school.config;
 
 import com.school.school.dto.User;
 import com.school.school.repository.UserRepository;
+import com.school.school.utils.Exception;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -49,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userRepository.findByEmail(email);
+            User user = Optional.ofNullable(userRepository.findByEmail(email)).orElseThrow(() -> new Exception("Usern not found", HttpStatus.NOT_FOUND));
 
             // Validate the token with the user's email
             if (jwtUtil.validateToken(token, user.email())) {

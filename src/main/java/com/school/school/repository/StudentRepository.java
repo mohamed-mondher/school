@@ -66,6 +66,7 @@ public class StudentRepository {
     }
 
     public Student save(Student student) {
+        userRepository.findByEmail(student.user().email());
         String encodedPassword = passwordEncoder.encode(student.user().password());  // Encode the password
         User newUser = new User(null, student.user().firstname(), student.user().lastname(), student.user().email(), encodedPassword, student.user().role());
         User savedUser = userRepository.save(newUser);

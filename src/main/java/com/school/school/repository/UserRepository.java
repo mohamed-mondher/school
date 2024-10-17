@@ -2,13 +2,11 @@ package com.school.school.repository;
 
 import com.school.school.dto.Role;
 import com.school.school.dto.User;
-import com.school.school.utils.Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -36,8 +34,11 @@ public class UserRepository {
     }
 
     public User findById(Long id) {
-        User user = jdbcTemplate.queryForObject("SELECT * FROM school.user WHERE id = ?", userRowMapper, id);
-        return user;
+        return jdbcTemplate.queryForObject("SELECT * FROM school.user WHERE id = ?", userRowMapper, id);
+    }
+
+    public User findByEmail(String email) {
+        return jdbcTemplate.queryForObject("SELECT * FROM school.user WHERE email = ?", userRowMapper, email);
     }
 
     public User save(User user) {
@@ -63,17 +64,11 @@ public class UserRepository {
     }
 
     public int update(User user, Long id) {
-        int result = jdbcTemplate.update("UPDATE school.user SET firstname = ?,lastname=?, email = ?,role=?,password=? WHERE id = ?", user.firstname(), user.lastname(), user.email(), user.role(), user.password(), id);
-        return result;
+        return jdbcTemplate.update("UPDATE school.user SET firstname = ?,lastname=?, email = ?,role=?,password=? WHERE id = ?", user.firstname(), user.lastname(), user.email(), user.role(), user.password(), id);
     }
 
     public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM school.user WHERE id = ?", id);
     }
-
-    public User findByEmail(String email) {
-        return jdbcTemplate.queryForObject("SELECT * FROM school.user WHERE email = ? ", userRowMapper, email);
-    }
-
 
 }
