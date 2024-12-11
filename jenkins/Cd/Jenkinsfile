@@ -1,0 +1,41 @@
+podTemplate(
+  inheritFrom: "jenkins-agent",
+  envVars: [
+      envVar(key: 'REGISTRY', value: 'acregisrtydev.azurecr.io'),
+      envVar(key: 'NAMESPACE', value: 'talenteo-dev'),
+      envVar(key: 'KUBECONFIG_ID', value: 'KUBECONFIG')
+    ],
+
+  containers: [
+    containerTemplate(name: "kubernetes-container", image: "kumahq/kubectl:v1.20.15", alwaysPullImage: false, ttyEnabled: true, command: "cat")
+  ]
+) {
+  node(POD_LABEL) {
+
+    stage("CodeCheckout_1") {
+      checkout scm
+    }
+
+    stage("copy artifact") {
+      copyArtifacts filter: 'image_tag.txt', fingerprintArtifacts: true, projectName: 'ci', selector: lastSuccessful(), target: '.'
+    }
+
+    stage("DeployKubernetes_1") {
+      container("kubernetes-container") {
+        withCredentials([
+          file(credentialsId: env.KUBECONFIG_ID, variable: 'KUBECONFIG')
+        ]) {
+          echo 'Applying K8s manifests...'
+          sh '''
+                image_tag=$(cat image_tag.txt)
+                echo "Image tag: $image_tag"
+          cd jenkins/Cd/
+          echo " Hello "
+                sed -i 's|\\${IMAGE_TAG}|${image_tag}|g' deployment.yaml
+                kubectl apply  -f deployment.yaml -f service.yaml -f ingress.yaml -n ${NAMESPACE}
+             '''
+        }
+      }
+    }
+  }
+}

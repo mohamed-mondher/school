@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: school-ingress # Nom de l'Ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: /school
+spec:
+  rules:
+    - host: dev.talenteo-platform.fr # Nom de domaine pour l'Ingress
+      http:
+        paths:
+          - path: /school # Chemin pour lequel cet Ingress répondra
+            pathType: Prefix
+            backend:
+              service:
+                name: school-service # Nom du service auquel l'Ingress redirige le trafic
+                port:
+                  number: 8080 # Port du service

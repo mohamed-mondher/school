@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: school-deployment # Nom du déploiement
+  labels:
+    app: school-app # Étiquettes pour identifier le déploiement
+
+spec:
+  replicas: 1 # Nombre de répliques de pods
+  selector:
+    matchLabels:
+      app: school-app # Sélecteur pour correspondre aux pods avec cette étiquette
+  template:
+    metadata:
+      labels:
+        app: school-app # Étiquettes à appliquer aux pods
+    spec:
+      containers:
+        - name: school-container # Nom du conteneur
+          image: acregisrtydev.azurecr.io/mondher-upskillingdevops:24 # Image Docker pour le conteneur
+          ports:
+            - containerPort: 8080 # Port exposé par le conteneur
+
+          resources:
+            limits:
+              memory: "256Mi" # Limite maximale de mémoire
+              cpu: "500m" # Limite maximale de CPU
+            requests:
+              memory: "128Mi" # Mémoire demandée
+              cpu: "250m" # CPU demandé

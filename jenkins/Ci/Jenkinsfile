@@ -1,0 +1,56 @@
+podTemplate(
+inheritFrom: "jenkins-agent",
+envVars: [
+envVar(key: 'MS_NAME', value: 'upskillingdevops'),
+envVar(key: 'DOCKERFILE', value: './Dockerfile'),
+envVar(key: 'REGISTRY', value: 'acregisrtydev.azurecr.io'),
+envVar(key: 'CODE_REPO', value: 'https://github.com/mohamed-mondher/school.git'),
+envVar(key: 'CODE_BRANCH', value: 'master' ),
+envVar(key: 'ACR', value: 'acr_credentials'),
+
+],
+containers: [
+  containerTemplate(name: "java-container", image: "maven:3-openjdk-17-slim", alwaysPullImage: false, ttyEnabled: true, command: "cat"),
+]
+) {
+node(POD_LABEL) {
+stage("CodeCheckout_1") {
+checkout scm
+}
+
+stage("BuildAndTestJava_1") {
+container("java-container") {
+
+sh """
+mvn -f "./pom.xml"  clean install -Dmaven.test.skip=true
+
+"""
+
+}
+}
+
+stage("DockerBuild_1") {
+container("docker-daemon") {
+sh """
+docker build -t "${REGISTRY}/mondher-${MS_NAME}:${BUILD_ID}" -f "${DOCKERFILE}" "."
+"""
+
+}
+}
+
+stage("DockerPush_1") {
+container("docker-daemon") {
+withDockerRegistry(credentialsId: env.ACR, url: "https://${REGISTRY}") {
+sh """
+docker push "${REGISTRY}/mondher-${MS_NAME}:${BUILD_ID}"
+"""
+}
+}
+}
+
+stage("post") {
+writeFile file: 'image_tag.txt', text: "${BUILD_ID}"
+archiveArtifacts artifacts: 'image_tag.txt', followSymlinks: false
+}
+}
+}
